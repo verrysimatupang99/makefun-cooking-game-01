@@ -72,11 +72,13 @@ export function applyShot(state, shot) {
     ];
     state.plate = ['nasi-matang'];
     state.windowPlate = null;
-    state.chef.x = 380;
-    state.chef.y = 350;
-    state.chef.tx = 380;
-    state.chef.ty = 350;
-    state.chef.dir = 1;
+    // chef in the open gap right of the stove, facing it: the carried chicken
+    // no longer overlaps the stove body, and no station label is hidden.
+    state.chef.x = 560;
+    state.chef.y = 365;
+    state.chef.tx = 560;
+    state.chef.ty = 365;
+    state.chef.dir = -1;
     state.carried = 'ayam-mentah';
     state.burners[0] = { item: 'ayam-potong', progress: 0.7, state: 'cooking', cookTime: 5, burnT: 0 };
     state.burners[1] = { item: 'nasi-mentah', progress: 0.35, state: 'cooking', cookTime: 6, burnT: 0 };

@@ -209,6 +209,13 @@ function drawStove(ctx, state, nearId, t) {
   ctx.fillStyle = '#3d4c55';
   rr(ctx, s.x + 8, s.y + 8, s.w - 16, s.h - 16, 8);
   ctx.fill();
+  // highlight BEFORE the sign, so its top edge never strikes through the label
+  if (near) {
+    ctx.strokeStyle = '#f2b705';
+    ctx.lineWidth = 4;
+    rr(ctx, s.x - 3, s.y - 3, s.w + 6, s.h + 6, 14);
+    ctx.stroke();
+  }
   drawStationSign(ctx, s.x + s.w / 2, s.y - 2, 'KOMPOR');
   state.burners.forEach((b, i) => {
     const burner = s.burners[i];
@@ -241,12 +248,6 @@ function drawStove(ctx, state, nearId, t) {
       textOutline(ctx, 'HANGUS!', burner.x, burner.y - burner.r - 16, 15, '#ff6b6b', '#17324a');
     }
   });
-  if (near) {
-    ctx.strokeStyle = '#f2b705';
-    ctx.lineWidth = 4;
-    rr(ctx, s.x - 3, s.y - 3, s.w + 6, s.h + 6, 14);
-    ctx.stroke();
-  }
 }
 
 function drawBoard(ctx, state, nearId, t) {
@@ -259,6 +260,13 @@ function drawBoard(ctx, state, nearId, t) {
   ctx.lineWidth = 4;
   rr(ctx, b.x, b.y, b.w, b.h, 12);
   ctx.stroke();
+  // highlight BEFORE the sign, so its top edge never strikes through the label
+  if (near) {
+    ctx.strokeStyle = '#f2b705';
+    ctx.lineWidth = 4;
+    rr(ctx, b.x - 3, b.y - 3, b.w + 6, b.h + 6, 14);
+    ctx.stroke();
+  }
   drawStationSign(ctx, b.x + b.w / 2, b.y - 2, 'TALENAN');
   // knife
   ctx.save();
@@ -283,12 +291,6 @@ function drawBoard(ctx, state, nearId, t) {
     text(ctx, 'TAHAN E — CINCANG!', b.cx, b.cy + 58, 14, '#17324a');
   } else if (state.board.state === 'done') {
     textOutline(ctx, 'SIAP DIAMBIL!', b.cx, b.cy + 58, 14, '#7ed491', '#17324a');
-  }
-  if (near) {
-    ctx.strokeStyle = '#f2b705';
-    ctx.lineWidth = 4;
-    rr(ctx, b.x - 3, b.y - 3, b.w + 6, b.h + 6, 14);
-    ctx.stroke();
   }
 }
 
@@ -324,21 +326,23 @@ function drawAssembly(ctx, state, nearId, t) {
   ctx.fillStyle = PALETTE.cream;
   rr(ctx, a.x + 8, a.y + 8, a.w - 16, a.h - 16, 8);
   ctx.fill();
-  drawStationSign(ctx, a.x + a.w / 2, a.y - 2, 'MEJA RAKIT');
-  drawPlate(ctx, a.plateX, a.plateY, state.plate, 1);
-  const complete = plateCompletesRecipe(state.plate);
-  if (complete) {
-    const pulse = 0.6 + 0.4 * Math.sin(t * 5);
-    ctx.strokeStyle = 'rgba(46,158,91,' + pulse + ')';
-    ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.ellipse(a.plateX, a.plateY, 62, 42, 0, 0, Math.PI * 2); ctx.stroke();
-    textOutline(ctx, 'SIAP DISAJIKAN!', a.plateX, a.plateY + 58, 16, '#2e9e5b', '#fff8e7');
-  }
+  // highlight BEFORE the sign, so its top edge never strikes through the label
   if (near) {
     ctx.strokeStyle = '#f2b705';
     ctx.lineWidth = 4;
     rr(ctx, a.x - 3, a.y - 3, a.w + 6, a.h + 6, 14);
     ctx.stroke();
+  }
+  drawStationSign(ctx, a.x + a.w / 2, a.y - 2, 'MEJA RAKIT');
+  // bigger plate (1.35x) so the mid-assembly dish reads clearly as the hero
+  drawPlate(ctx, a.plateX, a.plateY, state.plate, 1.35);
+  const complete = plateCompletesRecipe(state.plate);
+  if (complete) {
+    const pulse = 0.6 + 0.4 * Math.sin(t * 5);
+    ctx.strokeStyle = 'rgba(46,158,91,' + pulse + ')';
+    ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.ellipse(a.plateX, a.plateY, 84, 57, 0, 0, Math.PI * 2); ctx.stroke();
+    textOutline(ctx, 'SIAP DISAJIKAN!', a.plateX, a.plateY + 66, 16, '#2e9e5b', '#fff8e7');
   }
 }
 
@@ -357,6 +361,13 @@ function drawWindow(ctx, state, nearId, t) {
   ctx.lineWidth = 5;
   rr(ctx, w.x, w.y, w.w, w.h, 10);
   ctx.stroke();
+  // highlight BEFORE the sign, so its top edge never strikes through the label
+  if (near) {
+    ctx.strokeStyle = '#f2b705';
+    ctx.lineWidth = 4;
+    rr(ctx, w.x - 3, w.y - 3, w.w + 6, w.h + 6, 12);
+    ctx.stroke();
+  }
   drawStationSign(ctx, w.x + w.w / 2, w.y + 22, 'JENDELA SAJI');
   // service bell
   ctx.fillStyle = '#f2b705';
@@ -374,12 +385,6 @@ function drawWindow(ctx, state, nearId, t) {
   } else {
     text(ctx, '— sajikan di sini —', w.plateX, w.plateY, 15, '#8a97a0');
   }
-  if (near) {
-    ctx.strokeStyle = '#f2b705';
-    ctx.lineWidth = 4;
-    rr(ctx, w.x - 3, w.y - 3, w.w + 6, w.h + 6, 12);
-    ctx.stroke();
-  }
 }
 
 function drawTrash(ctx, state, nearId) {
@@ -388,6 +393,13 @@ function drawTrash(ctx, state, nearId) {
   ctx.fillStyle = PALETTE.steelDark;
   rr(ctx, tr.x, tr.y, tr.w, tr.h, 12);
   ctx.fill();
+  // highlight BEFORE the sign, so its top edge never strikes through the label
+  if (near) {
+    ctx.strokeStyle = '#f2b705';
+    ctx.lineWidth = 4;
+    rr(ctx, tr.x - 3, tr.y - 3, tr.w + 6, tr.h + 6, 14);
+    ctx.stroke();
+  }
   drawStationSign(ctx, tr.x + tr.w / 2, tr.y - 2, 'TONG SAMPAH');
   // bin
   ctx.fillStyle = '#5b6b76';
@@ -401,12 +413,29 @@ function drawTrash(ctx, state, nearId) {
   for (let i = -1; i <= 1; i++) {
     ctx.beginPath(); ctx.moveTo(tr.cx + i * 22, tr.cy - 30); ctx.lineTo(tr.cx + i * 22, tr.cy + 32); ctx.stroke();
   }
-  if (near) {
-    ctx.strokeStyle = '#f2b705';
-    ctx.lineWidth = 4;
-    rr(ctx, tr.x - 3, tr.y - 3, tr.w + 6, tr.h + 6, 14);
-    ctx.stroke();
-  }
+}
+
+// ---------- prep board: fills the bare strip between stove and assembly ----------
+// A small round wooden board with chopped veg + a bowl of sambal, sitting on the
+// floor in the gap (x 520..640). Decor only — the chef walks past it, never on it
+// in the staged shots; drawn under the chef like any floor prop.
+function drawPrepBoard(ctx) {
+  const cx = 580;
+  const cy = 190;
+  // soft shadow so it sits on the floor
+  ctx.fillStyle = 'rgba(23,50,74,0.18)';
+  ctx.beginPath(); ctx.ellipse(cx, cy + 6, 50, 34, 0, 0, Math.PI * 2); ctx.fill();
+  // round wooden board
+  ctx.fillStyle = '#d99a5b';
+  ctx.beginPath(); ctx.ellipse(cx, cy, 48, 33, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#8a5426';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.ellipse(cx, cy, 48, 33, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = '#e8c48d';
+  ctx.beginPath(); ctx.ellipse(cx, cy, 40, 26, 0, 0, Math.PI * 2); ctx.fill();
+  // chopped veg on the left half, small bowl of sambal on the right
+  drawFood(ctx, 'sayur-potong', cx - 16, cy - 2, 20);
+  drawFood(ctx, 'sambal', cx + 18, cy + 4, 18);
 }
 
 // ---------- chef ----------
@@ -720,6 +749,7 @@ export function drawFrame(ctx, state, t) {
   ctx.fillStyle = PALETTE.wall;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
   drawFloor(ctx);
+  drawPrepBoard(ctx);
   const near = state.screen === 'playing' ? nearestStation(state) : null;
   const nearId = near ? near.id : null;
   drawCrates(ctx, state, nearId, t);
